@@ -27,12 +27,15 @@ body {
 .card {
   position: relative; /* IMPORTANT */
   z-index: 10;
-  background: white;
+  background: rgb(235, 32, 32);
   padding: 16px;
   border-radius: 18px;
+  height: 450px;
   text-align: center;
-  width: 90%;
+  width: 80%;
   max-width: 320px;
+  align-items: center;
+  justify-content: center;
 
   animation: pulse 2s ease-in-out infinite;
 }
@@ -61,7 +64,10 @@ button{font-size:clamp(0.75rem,3.5vw,1rem);padding:8px 14px}
   content: "";
   position: absolute;
   inset: 3px;
-  background: white;
+  background-image: url(5.jpeg);
+  background-size: cover;           /* Image fills the card */
+  background-position: center;      /* Image centered */
+  background-repeat: no-repeat;  
   border-radius: 16px;
   z-index: -1;
 }
@@ -220,7 +226,7 @@ canvas { position:absolute; top:0; left:0; }
 </div>
 
 <script>
-let t="💖 You are my best friend 💖";
+let t="💖  💖";
 let ti=0;
 (function type(){
   if(ti<t.length){
@@ -230,9 +236,9 @@ let ti=0;
 })();
 
 const memories=[
- {img:"photo1.jpg",text:"Best 😍"},
- {img:"photo2.jpg",text:"Crazy 😂"},
- {img:"photo3.jpg",text:"Love 💖"}
+ {img:"1.jpeg",text:"Best 😍"},
+ {img:"2.jpeg",text:"Crazy 😂"},
+ {img:"3.jpeg",text:"Love 💖"}
 ];
 
 setInterval(()=>{
