@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday! 🎉</title>
+
+<style>
+*{box-sizing:border-box}
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
+
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow: hidden;
+}
+
+.card {
+  position: relative; /* IMPORTANT */
+  z-index: 10;
+  background: white;
+  padding: 16px;
+  border-radius: 18px;
+  text-align: center;
+  width: 90%;
+  max-width: 320px;
+
+  animation: pulse 2s ease-in-out infinite;
+}
+
+
+
+
+
+
+
+.card h1{font-size:clamp(1.2rem,6vw,1.8rem)}
+.card p{font-size:clamp(0.8rem,4vw,1rem)}
+button{font-size:clamp(0.75rem,3.5vw,1rem);padding:8px 14px}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 20px;
+  background: linear-gradient(270deg, gold, #ffd700, #fff8dc, gold);
+  background-size: 600% 600%;
+  animation: borderMove 6s linear infinite;
+  z-index: -2;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: white;
+  border-radius: 16px;
+  z-index: -1;
+}
+.card > * { position: relative; z-index: 2; }
+
+@keyframes borderMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+#title.animate {
+  animation: titleFly 1.5s ease forwards;
+}
+
+@keyframes titleFly {
+  0% { transform: translateY(0) scale(1); opacity:1; }
+  100% { transform: translateY(-180px) scale(1.5); opacity:0; }
+}
+
+.title-particle{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background: gold;
+  pointer-events:none;
+  animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode{
+  from{opacity:1; transform: translate(0,0) scale(1);} 
+  to{opacity:0; transform: translate(var(--x), var(--y)) scale(0.5);} 
+}
+
+.sky-text{
+  position:absolute;
+  top:18%;
+  left:50%;
+  transform: translateX(-100%);
+  font-size:clamp(1.8rem,9vw,3rem);
+  font-weight:bold;
+  color:#fff;
+  text-shadow:0 0 10px gold,0 0 20px gold,0 0 30px orange;
+  opacity:0;
+  animation: skyReveal 2s ease infinite;
+  z-index:20;
+  text-align:center;
+  padding:0 10px;
+
+  width:100%;              /* 🔥 FIX */
+  max-width:100vw;         /* 🔥 FIX */
+}
+
+@keyframes skyReveal{
+  0%{
+    opacity:0;
+    transform: translate( 20px) scale(0.5); /* FIX */
+  } 
+  50%{
+    opacity:1;
+    transform: translate(-50%, 0) scale(1.2); /* FIX */
+  } 
+  100%{
+    opacity:1;
+    transform: translate(-50%, 0) scale(1); /* FIX */
+  } 
+}
+
+
+.spotlight {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,0,0,0) 220px, rgba(0,0,0,0.4) 400px, rgba(0,0,0,0.6) 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.polaroid {
+  position: absolute;
+  width: 24vw;
+  max-width: 100px;
+  background: white;
+  padding: 5px 5px 10px;
+  border-radius: 6px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  animation: fall linear forwards;
+}
+.polaroid img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+}
+.caption { font-size: 8px; }
+
+@keyframes fall {
+  from { transform: translateY(-400px) rotate(-10deg); }
+  to { transform: translateY(110vh) rotate(20deg); }
+}
+
+.balloon {
+  position: absolute;
+  bottom: -100px;
+  width: 7vw;
+  max-width: 28px;
+  height: 10vw;
+  max-height: 42px;
+  border-radius: 50%;
+  animation: rise 6s linear forwards;
+}
+
+@keyframes rise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: fade 1s linear forwards;
+}
+
+from { transform: translateY(-250px) rotate(-10deg); }
+
+
+@keyframes fade {
+  from { opacity:1 }
+  to { opacity:0 }
+}
+
+canvas { position:absolute; top:0; left:0; }
+
+/* EXTRA MOBILE TUNING */
+@media (max-width:480px){
+  .card{padding:14px;border-radius:16px}
+  .polaroid{width:26vw}
+  .balloon{width:8vw;height:11vw}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+<audio id="music" src="music.mp3" loop></audio>
+<div class="spotlight"></div>
+
+<div class="card">
+  <h1 id="title">🎂Happy Birthday!🎂</h1>
+  <p id="type"></p>
+  <button onclick="celebrate()">Click 🎁</button>
+</div>
+
+<script>
+let t="💖 You are my best friend 💖";
+let ti=0;
+(function type(){
+  if(ti<t.length){
+    document.getElementById('type').innerHTML += t[ti++];
+    setTimeout(type,40);
+  }
+})();
+
+const memories=[
+ {img:"photo1.jpg",text:"Best 😍"},
+ {img:"photo2.jpg",text:"Crazy 😂"},
+ {img:"photo3.jpg",text:"Love 💖"}
+];
+
+setInterval(()=>{
+  const d=document.createElement('div');
+  d.className='polaroid';
+  const m=memories[Math.floor(Math.random()*memories.length)];
+  d.innerHTML=`<img src="${m.img}"><div class='caption'>${m.text}</div>`;
+  d.style.left = Math.random()*window.innerWidth + 'px';
+  d.style.animationDuration = (3+Math.random()*4)+'s';
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),7000);
+},400);
+
+setInterval(()=>{
+  const b=document.createElement('div');
+  b.className='balloon';
+  b.style.left = Math.random()*window.innerWidth + 'px';
+  b.style.background = `hsl(${Math.random()*360},70%,60%)`;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),6000);
+},500);
+
+setInterval(()=>{
+  const s=document.createElement('div');
+  s.className='sparkle';
+  s.style.top = Math.random()*window.innerHeight + 'px';
+  s.style.left = Math.random()*window.innerWidth + 'px';
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),1000);
+},100);
+
+const c=document.getElementById('fireworks');
+const ctx=c.getContext('2d');
+
+function resize(){
+  c.width=window.innerWidth;
+  c.height=window.innerHeight;
+}
+resize();
+window.addEventListener('resize',resize);
+
+let p=[];
+
+setInterval(()=>{
+  let x=Math.random()*c.width;
+  let y=Math.random()*c.height/2;
+  for(let i=0;i<80;i++){
+    p.push({x,y,dx:(Math.random()-0.5)*5,dy:(Math.random()-0.5)*5,l:80});
+  }
+},800);
+
+(function draw(){
+  ctx.fillStyle='rgba(0,0,0,0.1)';
+  ctx.fillRect(0,0,c.width,c.height);
+  p.forEach((e,i)=>{
+    e.x+=e.dx;
+    e.y+=e.dy;
+    e.l--;
+    ctx.fillRect(e.x,e.y,2,2);
+    if(e.l<=0) p.splice(i,1);
+  });
+  requestAnimationFrame(draw);
+})();
+
+function boom(){
+  const rect=document.querySelector('.card').getBoundingClientRect();
+  for(let i=0;i<20;i++){
+    const s=document.createElement('div');
+    s.className='sparkle';
+    s.style.left=(rect.left+Math.random()*rect.width)+'px';
+    s.style.top=(rect.top+Math.random()*rect.height)+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1000);
+  }
+}
+
+function explodeTitle(){
+  const title = document.getElementById('title');
+  const rect = title.getBoundingClientRect();
+
+  for(let i=0;i<120;i++){
+    const pEl = document.createElement('div');
+    pEl.className = 'title-particle';
+
+    const x = (Math.random()-0.5)*300 + 'px';
+    const y = (Math.random()-0.5)*300 + 'px';
+
+    pEl.style.left = rect.left + rect.width/2 + 'px';
+    pEl.style.top = rect.top + rect.height/2 + 'px';
+    pEl.style.setProperty('--x', x);
+    pEl.style.setProperty('--y', y);
+
+    document.body.appendChild(pEl);
+    setTimeout(()=>pEl.remove(),1000);
+  }
+}
+
+function celebrate(){
+  const title = document.getElementById('title');
+  title.classList.add('animate');
+
+  setTimeout(()=>{
+    explodeTitle();
+
+    const name = document.createElement('div');
+    name.className = 'sky-text';
+    name.innerText = 'MY BFF ❤️';
+    document.body.appendChild(name);
+  },400);
+
+  const music = document.getElementById('music');
+  if(music && music.paused){
+    music.play();
+  }
+
+  for(let k=0;k<5;k++){
+    let x=Math.random()*c.width;
+    let y=Math.random()*c.height/2;
+    for(let i=0;i<150;i++){
+      p.push({x,y,dx:(Math.random()-0.5)*8,dy:(Math.random()-0.5)*8,l:100});
+    }
+  }
+
+  boom();
+}
+
+// setInterval(()=>{
+//   const card = document.querySelector('.card');
+
+//   // always reset first
+//   card.style.setProperty('--scale','1');
+
+//   setTimeout(()=>{
+//     card.style.setProperty('--scale','1.05');
+
+//     setTimeout(()=>{
+//       card.style.setProperty('--scale','1');
+//     },150);
+
+//   },10);
+
+//   boom();
+// },800);
+
+
+
+</script>
+
+</body>
+</html>
